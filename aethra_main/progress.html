@@ -1,0 +1,505 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aethra — Analyzing</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #B8933F;
+    --gold-light: #D4A853;
+    --gold-pale: #F5EDD8;
+    --gold-dim: #7A5F28;
+    --ink: #0E0D0B;
+    --ink-2: #2A2720;
+    --ink-3: #4A4640;
+    --ink-4: #7A756E;
+    --ink-5: #A89F95;
+    --cream: #FAF7F2;
+    --cream-2: #F3EDE2;
+    --cream-3: #EAE1D3;
+    --white: #FFFFFF;
+    --border: rgba(184,147,63,0.18);
+    --border-strong: rgba(184,147,63,0.38);
+    --green: #4CAF7D;
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  /* Full-height layout */
+  .layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 56px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+  }
+
+  .topbar-left { display: flex; align-items: center; gap: 36px; }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  nav { display: flex; gap: 24px; }
+
+  .nav-link {
+    font-size: 13px;
+    color: var(--ink-5);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: color .2s;
+  }
+
+  .nav-link:hover { color: var(--ink); }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  .icon-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--cream-3);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--ink-4);
+    transition: background .2s, border-color .2s;
+  }
+
+  .icon-btn:hover { background: var(--cream-2); border-color: var(--border); }
+
+  /* MAIN — takes remaining height */
+  .main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 24px;
+    min-height: 0;
+  }
+
+  /* CENTER CONTAINER */
+  .center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 580px;
+    gap: 0;
+  }
+
+  /* Spinner */
+  .spinner-wrap {
+    position: relative;
+    width: 88px; height: 88px;
+    flex-shrink: 0;
+    margin-bottom: 20px;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid transparent;
+  }
+
+  .ring-1 {
+    inset: 0;
+    border-color: rgba(184,147,63,0.15);
+    animation: spin 8s linear infinite;
+  }
+
+  .ring-2 {
+    inset: 10px;
+    border-color: rgba(184,147,63,0.3);
+    animation: spin 12s linear infinite reverse;
+  }
+
+  .ring-3 {
+    inset: 20px;
+    border-color: rgba(184,147,63,0.1);
+    animation: spin 16s linear infinite;
+  }
+
+  .spinner-core {
+    position: absolute;
+    inset: 28px;
+    background: var(--white);
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .spinner-star {
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.88)} }
+
+  /* Heading */
+  .heading {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .heading em { font-style: italic; color: var(--gold); }
+
+  .subtext {
+    font-size: 13px;
+    color: var(--ink-4);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 400px;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  /* Steps card */
+  .card {
+    width: 100%;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+
+  .card-inner {
+    padding: 20px 24px 16px;
+  }
+
+  .steps-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cream-3);
+    opacity: 0.38;
+    transition: opacity .35s ease;
+  }
+
+  .step-row:last-child { border-bottom: none; }
+  .step-row.active, .step-row.done { opacity: 1; }
+
+  .step-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .step-icon {
+    width: 22px; height: 22px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+
+  .step-icon.spinning { animation: spin .9s linear infinite; }
+
+  .step-name {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  .step-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--ink-5);
+    transition: color .3s;
+  }
+
+  .step-badge.done-badge { color: var(--green); }
+  .step-badge.processing-badge { color: var(--gold); }
+
+  /* Insight bar */
+  .insight-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 24px;
+    background: var(--cream);
+    border-top: 1px solid var(--cream-3);
+  }
+
+  .insight-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    animation: pulse 2s ease infinite;
+  }
+
+  .insight-text {
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.04em;
+    font-style: italic;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 300;
+  }
+
+  /* FOOTER */
+  footer {
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    padding: 12px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--cream);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .footer-copy { font-size: 11px; color: var(--ink-5); letter-spacing: 0.03em; }
+
+  .footer-links { display: flex; gap: 18px; }
+
+  .footer-link {
+    font-size: 11px;
+    color: var(--ink-5);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+
+  .footer-link:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <a class="logo" href="#">Aethra</a>
+      <nav>
+        <a class="nav-link" href="#">New Assessment</a>
+        <a class="nav-link" href="#">History</a>
+        <a class="nav-link" href="#">Reports</a>
+        <a class="nav-link" href="#">Settings</a>
+      </nav>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn">🔔</button>
+      <button class="icon-btn">👤</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="center">
+
+      <!-- Spinner -->
+      <div class="spinner-wrap">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <div class="spinner-core">
+          <span class="spinner-star">✦</span>
+        </div>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="heading" id="mainHeading">Analyzing Material <em>Fingerprint…</em></h1>
+      <p class="subtext">Our neural networks are cross-referencing spectral signatures against the Aethra Gold Global Ledger.</p>
+
+      <!-- Card -->
+      <div class="card">
+        <div class="card-inner">
+          <ul class="steps-list">
+
+            <li class="step-row" id="row1">
+              <div class="step-left">
+                <div class="step-icon" id="icon1">○</div>
+                <span class="step-name">Preprocessing image</span>
+              </div>
+              <span class="step-badge" id="badge1"></span>
+            </li>
+
+            <li class="step-row" id="row2">
+              <div class="step-left">
+                <div class="step-icon" id="icon2">○</div>
+                <span class="step-name">Normalizing light (α-scaling)</span>
+              </div>
+              <span class="step-badge" id="badge2"></span>
+            </li>
+
+            <li class="step-row" id="row3">
+              <div class="step-left">
+                <div class="step-icon" id="icon3">○</div>
+                <span class="step-name">Extracting spectral data (L_B)</span>
+              </div>
+              <span class="step-badge" id="badge3"></span>
+            </li>
+
+            <li class="step-row" id="row4">
+              <div class="step-left">
+                <div class="step-icon" id="icon4">○</div>
+                <span class="step-name">Running hallmark OCR</span>
+              </div>
+              <span class="step-badge" id="badge4"></span>
+            </li>
+
+            <li class="step-row" id="row5">
+              <div class="step-left">
+                <div class="step-icon" id="icon5">○</div>
+                <span class="step-name">Analyzing acoustic signal</span>
+              </div>
+              <span class="step-badge" id="badge5"></span>
+            </li>
+
+            <li class="step-row" id="row6">
+              <div class="step-left">
+                <div class="step-icon" id="icon6">○</div>
+                <span class="step-name">Detecting fraud signals</span>
+              </div>
+              <span class="step-badge" id="badge6"></span>
+            </li>
+
+            <li class="step-row" id="row7">
+              <div class="step-left">
+                <div class="step-icon" id="icon7">○</div>
+                <span class="step-name">Generating consensus</span>
+              </div>
+              <span class="step-badge" id="badge7"></span>
+            </li>
+
+          </ul>
+        </div>
+
+        <div class="insight-bar">
+          <div class="insight-dot"></div>
+          <span class="insight-text" id="insightText">AI Insight: Scanning for density anomalies in lower substrate layers</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <span class="footer-copy">© 2024 Aethra Gold Assessment. All rights reserved.</span>
+    <div class="footer-links">
+      <a class="footer-link" href="#">Privacy</a>
+      <a class="footer-link" href="#">Terms</a>
+      <a class="footer-link" href="#">Security</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+const steps = [
+  { row:"row1", icon:"icon1", badge:"badge1" },
+  { row:"row2", icon:"icon2", badge:"badge2" },
+  { row:"row3", icon:"icon3", badge:"badge3" },
+  { row:"row4", icon:"icon4", badge:"badge4" },
+  { row:"row5", icon:"icon5", badge:"badge5" },
+  { row:"row6", icon:"icon6", badge:"badge6" },
+  { row:"row7", icon:"icon7", badge:"badge7" },
+];
+
+const insights = [
+  "AI Insight: Scanning for density anomalies in lower substrate layers",
+  "AI Insight: Cross-referencing hallmark against 2.4M verified records",
+  "AI Insight: Light normalization complete — chromatic variance within 0.3%",
+  "AI Insight: Spectral profile matches 18K gold signature at 94.2% confidence",
+  "AI Insight: Acoustic resonance consistent with solid gold composition",
+  "AI Insight: No plating indicators detected in surface layer analysis",
+  "AI Insight: Consensus engine aggregating 7 independent model outputs",
+];
+
+let current = 0;
+
+function tick() {
+  // Mark previous as done
+  if (current > 0) {
+    const prev = steps[current - 1];
+    document.getElementById(prev.row).classList.remove("active");
+    document.getElementById(prev.row).classList.add("done");
+    const prevIcon = document.getElementById(prev.icon);
+    prevIcon.textContent = "✓";
+    prevIcon.classList.remove("spinning");
+    prevIcon.style.color = "#4CAF7D";
+    const prevBadge = document.getElementById(prev.badge);
+    prevBadge.textContent = "DONE";
+    prevBadge.className = "step-badge done-badge";
+  }
+
+  if (current < steps.length) {
+    const s = steps[current];
+    const row = document.getElementById(s.row);
+    row.classList.add("active");
+    const icon = document.getElementById(s.icon);
+    icon.textContent = "↻";
+    icon.classList.add("spinning");
+    icon.style.color = "#B8933F";
+    const badge = document.getElementById(s.badge);
+    badge.textContent = "PROCESSING…";
+    badge.className = "step-badge processing-badge";
+    document.getElementById("insightText").textContent = insights[current];
+    current++;
+    setTimeout(tick, 1250);
+  } else {
+    window.location.href = "dashboard.html";
+  }
+}
+
+tick();
+</script>
+</body>
+</html>

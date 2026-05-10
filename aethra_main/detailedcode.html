@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aethra — Professional Gold Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #B8933F;
+    --gold-light: #D4A853;
+    --gold-pale: #F5EDD8;
+    --gold-dim: #7A5F28;
+    --ink: #0E0D0B;
+    --ink-2: #2A2720;
+    --ink-3: #4A4640;
+    --ink-4: #7A756E;
+    --ink-5: #A89F95;
+    --cream: #FAF7F2;
+    --cream-2: #F3EDE2;
+    --cream-3: #EAE1D3;
+    --white: #FFFFFF;
+    --border: rgba(184,147,63,0.18);
+    --border-strong: rgba(184,147,63,0.38);
+    --sidebar-w: 256px;
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* SIDEBAR */
+  aside {
+    width: var(--sidebar-w);
+    background: var(--ink-2);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0; top: 0;
+    height: 100vh;
+    padding: 32px 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo { padding: 0 28px 28px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 8px; }
+  .logo-name { font-family: var(--font-display); font-size: 28px; font-weight: 300; letter-spacing: 0.14em; color: var(--gold-light); display: block; line-height: 1; }
+  .logo-sub { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-5); margin-top: 5px; display: block; }
+
+  .user-row { display: flex; align-items: center; gap: 10px; padding: 18px 28px; }
+  .user-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; border: 1.5px solid var(--gold-dim); flex-shrink: 0; }
+  .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .user-status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-5); }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #5dbb7f; animation: pulse 2.4s ease infinite; flex-shrink: 0; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  nav { padding: 12px 0; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 11px; padding: 11px 28px; font-size: 13px; color: rgba(255,255,255,0.38); text-decoration: none; letter-spacing: 0.03em; transition: color .2s, background .2s; position: relative; cursor: pointer; }
+  .nav-item.active { color: var(--gold-light); background: rgba(184,147,63,0.08); }
+  .nav-item.active::before { content:''; position: absolute; left:0; top:0; bottom:0; width: 2px; background: var(--gold); }
+  .nav-item:hover:not(.active) { color: rgba(255,255,255,0.65); background: rgba(255,255,255,0.03); }
+  .nav-icon { font-size: 14px; width: 16px; text-align: center; }
+
+  .sidebar-bottom { padding: 0 18px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; margin-top: 8px; }
+  .btn-new { width: 100%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--ink); border: none; border-radius: 3px; padding: 12px; font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: opacity .2s, transform .15s; margin-bottom: 16px; }
+  .btn-new:hover { opacity: .88; transform: translateY(-1px); }
+
+  .sidebar-links { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .sidebar-link { font-size: 11px; color: rgba(255,255,255,0.28); text-decoration: none; letter-spacing: 0.05em; padding: 5px 18px; display: flex; align-items: center; gap: 8px; border-radius: 2px; transition: color .2s; }
+  .sidebar-link:hover { color: rgba(255,255,255,0.5); }
+
+  /* MAIN */
+  main { flex: 1; margin-left: var(--sidebar-w); min-height: 100vh; display: flex; flex-direction: column; background: var(--cream); }
+
+  .topbar { padding: 18px 48px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(250,247,242,0.92); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 20; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-5); letter-spacing: 0.04em; }
+  .breadcrumb span:last-child { color: var(--ink-3); font-weight: 500; }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .badge { display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(184,147,63,0.08); border: 1px solid var(--border-strong); border-radius: 2px; font-size: 9px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-dim); }
+  .session-id { font-family: var(--font-mono); font-size: 11px; color: var(--ink-5); }
+
+  .page-body { flex: 1; padding: 48px 48px 40px; max-width: 1100px; width: 100%; margin: 0 auto; }
+
+  /* Page header */
+  .page-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 40px; gap: 24px; animation: fadeUp .5s ease both; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 12px; }
+  .eyebrow::before { content: ''; display: block; width: 20px; height: 1px; background: var(--gold); }
+  .page-title { font-family: var(--font-display); font-size: 48px; font-weight: 300; line-height: 1.05; letter-spacing: -0.01em; color: var(--ink); }
+  .page-title em { font-style: italic; color: var(--gold); }
+  .page-subtitle { font-size: 14px; color: var(--ink-4); font-weight: 300; line-height: 1.65; margin-top: 10px; max-width: 360px; }
+  .engine-pill { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--white); border: 1px solid var(--border); border-radius: 40px; font-size: 12px; color: var(--ink-3); white-space: nowrap; flex-shrink: 0; }
+
+  /* Card */
+  .assessment-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 24px rgba(0,0,0,0.04), 0 0 0 1px rgba(184,147,63,0.06); animation: fadeUp .5s .08s ease both; }
+
+  .card-header { padding: 22px 32px; border-bottom: 1px solid var(--cream-3); display: flex; align-items: center; justify-content: space-between; background: var(--cream); }
+  .card-header-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; letter-spacing: 0.04em; color: var(--ink); }
+  .card-step { display: flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 0.12em; color: var(--ink-5); text-transform: uppercase; }
+  .step-dot { width: 20px; height: 20px; border-radius: 50%; background: var(--gold); color: var(--white); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+
+  /* Two cols inside card */
+  .card-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+
+  /* Upload col */
+  .col-upload { padding: 36px 32px; border-right: 1px solid var(--cream-3); display: flex; flex-direction: column; gap: 20px; }
+  .col-label { font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-4); display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .col-label::after { content: ''; flex: 1; height: 1px; background: var(--cream-3); }
+
+  .upload-zone { border: 1.5px dashed var(--border-strong); border-radius: 6px; background: var(--cream); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; position: relative; overflow: hidden; transition: border-color .3s var(--ease), box-shadow .3s var(--ease), background .3s; min-height: 280px; padding: 36px 28px; }
+  .upload-zone::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(184,147,63,0.07) 0%, transparent 65%); pointer-events: none; }
+  .upload-zone:hover { border-color: var(--gold); background: var(--white); box-shadow: 0 0 0 4px rgba(184,147,63,0.07); }
+
+  .upload-icon-ring { width: 68px; height: 68px; border-radius: 50%; border: 1.5px solid var(--border-strong); background: var(--white); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transition: transform .3s var(--ease), border-color .3s; font-size: 26px; }
+  .upload-zone:hover .upload-icon-ring { transform: scale(1.07); border-color: var(--gold); }
+  .upload-title { font-family: var(--font-display); font-size: 19px; font-weight: 400; color: var(--ink); margin-bottom: 7px; letter-spacing: 0.02em; }
+  .upload-hint { font-size: 12px; color: var(--ink-5); line-height: 1.65; margin-bottom: 22px; }
+
+  input[type="file"] { display: none; }
+
+  .btn-select { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--ink); color: var(--ink); background: transparent; padding: 10px 22px; font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: background .2s, color .2s; text-decoration: none; }
+  .btn-select:hover { background: var(--ink); color: var(--white); }
+
+  #preview { width: 100%; max-height: 240px; object-fit: cover; border-radius: 4px; display: none; border: 1px solid var(--cream-3); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+
+  .upload-tips { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tip-card { background: var(--cream); border: 1px solid var(--cream-3); border-radius: 4px; padding: 12px 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .tip-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 11px; color: var(--ink-4); line-height: 1.5; }
+
+  /* Details col */
+  .col-details { padding: 36px 32px; display: flex; flex-direction: column; }
+
+  .field { margin-bottom: 20px; }
+  .field-label { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 8px; }
+  .field-wrap { position: relative; }
+  .field-input, .field-select { width: 100%; background: var(--cream); border: 1px solid var(--cream-3); border-radius: 4px; padding: 13px 16px; font-family: var(--font-body); font-size: 14px; color: var(--ink); font-weight: 300; outline: none; appearance: none; transition: border-color .2s, box-shadow .2s, background .2s; }
+  .field-input::placeholder { color: var(--ink-5); }
+  .field-input:focus, .field-select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,147,63,0.1); background: var(--white); }
+  .field-suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-family: var(--font-mono); font-size: 11px; color: var(--ink-5); pointer-events: none; }
+  .select-arrow { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--ink-5); font-size: 11px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .params-row { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 22px; }
+  .param-chip { background: var(--cream); border: 1px solid var(--cream-3); border-radius: 4px; padding: 12px 14px; transition: border-color .2s; }
+  .param-chip:hover { border-color: var(--border-strong); }
+  .param-label { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-5); font-weight: 500; margin-bottom: 4px; }
+  .param-value { font-family: var(--font-mono); font-size: 12px; color: var(--gold-dim); font-weight: 500; }
+
+  .btn-scan { width: 100%; background: var(--ink-2); color: var(--gold-light); border: none; border-radius: 4px; padding: 16px 24px; font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background .2s, transform .15s, box-shadow .2s; position: relative; overflow: hidden; }
+  .btn-scan::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 40%, rgba(184,147,63,0.1) 100%); }
+  .btn-scan:hover { background: var(--ink); box-shadow: 0 6px 24px rgba(14,13,11,0.22); transform: translateY(-1px); }
+  .btn-scan:active { transform: translateY(0); }
+  .bolt-icon { animation: blink 1.8s ease infinite; }
+  @keyframes blink { 0%,80%,100%{opacity:1} 40%{opacity:.45} }
+  .disclaimer { font-size: 11px; color: var(--ink-5); text-align: center; margin-top: 10px; line-height: 1.6; font-style: italic; letter-spacing: 0.01em; }
+
+  /* Recent strip */
+  .recent-strip { padding: 18px 32px; border-top: 1px solid var(--cream-3); display: flex; align-items: center; gap: 16px; background: var(--cream); }
+  .recent-label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-5); font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+  .recent-items { display: flex; gap: 10px; overflow-x: auto; flex: 1; }
+  .recent-item { display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; background: var(--white); border: 1px solid var(--cream-3); border-radius: 4px; cursor: pointer; flex-shrink: 0; text-decoration: none; transition: border-color .2s, box-shadow .2s; }
+  .recent-item:hover { border-color: var(--border-strong); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  .recent-thumb { width: 36px; height: 36px; border-radius: 3px; overflow: hidden; flex-shrink: 0; border: 1px solid var(--cream-3); display: flex; align-items: center; justify-content: center; background: var(--cream-2); font-size: 16px; }
+  .recent-thumb img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(15%); }
+  .recent-name { font-size: 12px; font-weight: 500; color: var(--ink); white-space: nowrap; }
+  .recent-meta { font-size: 10px; color: var(--ink-5); font-family: var(--font-mono); letter-spacing: 0.03em; white-space: nowrap; }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--border); padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; background: var(--cream); flex-wrap: wrap; gap: 12px; }
+  .footer-logo { font-family: var(--font-display); font-size: 18px; font-weight: 300; letter-spacing: 0.1em; color: var(--ink); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-link { font-size: 11px; color: var(--ink-5); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color .2s; }
+  .footer-link:hover { color: var(--gold); }
+  .footer-copy { font-size: 11px; color: var(--ink-5); letter-spacing: 0.03em; }
+
+  /* Loading */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(14,13,11,0.82); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 18px; }
+  .overlay.active { display: flex; }
+  .spinner { width: 44px; height: 44px; border: 1.5px solid rgba(184,147,63,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin .9s linear infinite; }
+  .spinner-text { font-family: var(--font-display); font-size: 17px; font-weight: 300; color: var(--gold-light); letter-spacing: 0.12em; font-style: italic; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 1024px) {
+    aside { display: none; }
+    main { margin-left: 0; }
+    .topbar, footer { padding: 16px 24px; }
+    .page-body { padding: 32px 24px; }
+    .card-body { grid-template-columns: 1fr; }
+    .col-upload { border-right: none; border-bottom: 1px solid var(--cream-3); }
+    .page-title { font-size: 36px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (max-width: 640px) {
+    .upload-tips { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .recent-strip { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p class="spinner-text">Initiating Analysis…</p>
+</div>
+
+<aside>
+  <div class="sidebar-logo">
+    <span class="logo-name">Aethra</span>
+    <span class="logo-sub">Professional Grade AI</span>
+  </div>
+  <div class="user-row">
+    <div class="user-avatar">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBby-Cl_H6UQ7zZHeHzeHt5E-pX2aa5tl2OCUkoD1Mbs_H6vNF5PMLe7cqVkHtxQJHN8VthsMnz1c87_0ER1zT8FYTCuXqE6hvPApUKL6xngv1ozOVOTxapQcZNARmWDrc8wXktMn_13MbSb5Ko_Oye9GhcUCzPl9ev6E4-tFp4Ym9cQlUhKKtjl41m0z8Y8akbkdumcfUtva6BggBFQ8V5eSlyGPxHzSDU-jV-Ebti-F4UBK49NhIaXYtORNkKn_GeeElhiPmnT0U" alt="User"/>
+    </div>
+    <div class="user-status"><span class="dot"></span> System Ready</div>
+  </div>
+  <nav>
+    <a class="nav-item active" href="#"><span class="nav-icon">◎</span> New Assessment</a>
+    <a class="nav-item" href="#"><span class="nav-icon">○</span> History</a>
+    <a class="nav-item" href="#"><span class="nav-icon">≡</span> Reports</a>
+    <a class="nav-item" href="#"><span class="nav-icon">⚙</span> Settings</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <button class="btn-new">⚡ New Analysis</button>
+    <div class="sidebar-links">
+      <a class="sidebar-link" href="#">○ Support</a>
+      <a class="sidebar-link" href="#">→ Sign Out</a>
+    </div>
+  </div>
+</aside>
+
+<main>
+  <header class="topbar">
+    <div class="breadcrumb">
+      <span>Assessments</span>
+      <span style="color:var(--ink-5)">›</span>
+      <span>New Assessment</span>
+    </div>
+    <div class="topbar-right">
+      <div class="badge"><span style="font-size:7px">●</span> ISO 17025 Compliant</div>
+      <span class="session-id">Session #A-4821</span>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="page-header">
+      
+      
+
+    <div class="assessment-card">
+      <div class="card-header">
+        <span class="card-header-title">Asset Analysis Form</span>
+        <div class="card-step">
+          <div class="step-dot">1</div>
+          Upload &amp; Configure
+        </div>
+      </div>
+
+      <div class="card-body">
+        <!-- Upload column -->
+        <div class="col-upload">
+          <div class="col-label">Asset Photo</div>
+
+          <label for="goldImage" style="cursor:pointer;display:block;">
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-icon-ring" id="uploadIconRing">📷</div>
+              <h2 class="upload-title" id="uploadTitle">Upload Asset Photo</h2>
+              <p class="upload-hint" id="uploadHint">Optimal lighting ensures hallucination-free<br>spectral analysis and precise readings</p>
+              <span class="btn-select" id="selectBtn">Select High-Res Image</span>
+              <img id="preview" alt="Asset Preview"/>
+            </div>
+          </label>
+          <input type="file" id="goldImage" accept="image/*" onchange="previewImage(event)"/>
+
+          <div>
+            <div class="col-label" style="margin-bottom:12px;">Photo Guidelines</div>
+            <div class="upload-tips">
+              <div class="tip-card"><span class="tip-icon">☀️</span><span class="tip-text">Use natural or diffused lighting, avoid harsh shadows</span></div>
+              <div class="tip-card"><span class="tip-icon">🔍</span><span class="tip-text">Ensure hallmarks are clearly visible and in focus</span></div>
+              <div class="tip-card"><span class="tip-icon">📐</span><span class="tip-text">Capture the full item on a neutral background</span></div>
+              <div class="tip-card"><span class="tip-icon">📷</span><span class="tip-text">Minimum 4MP resolution for accurate analysis</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details column -->
+        <div class="col-details">
+          <div class="col-label" style="margin-bottom:20px;">Assessment Details</div>
+
+          <div class="field">
+            <label class="field-label">Hallmark Information</label>
+            <div class="field-wrap">
+              <input class="field-input" type="text" placeholder="e.g. 750, Leopard Head, Date Letter"/>
+              <span class="field-suffix">⬡</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Jewelry Type</label>
+            <div class="field-wrap">
+              <select class="field-select">
+                <option>Select Type…</option>
+                <option>Ring</option>
+                <option>Bracelet</option>
+                <option>Necklace</option>
+                <option>Earrings</option>
+                <option>Watch</option>
+                <option>Other</option>
+              </select>
+              <span class="select-arrow">▾</span>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom:20px;">
+            <div class="field" style="margin-bottom:0">
+              <label class="field-label">Weight</label>
+              <div class="field-wrap">
+                <input class="field-input" type="number" placeholder="0.00" step="0.01" style="padding-right:30px"/>
+                <span class="field-suffix">g</span>
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label class="field-label">Claimed Purity</label>
+              <div class="field-wrap">
+                <select class="field-select">
+                  <option>9K (375)</option>
+                  <option>14K (585)</option>
+                  <option selected>18K (750)</option>
+                  <option>22K (916)</option>
+                  <option>24K (999)</option>
+                </select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+          </div>
+
+          
+
+          <button class="btn-scan" onclick="startAnalysis()">
+            <span class="bolt-icon">⚡</span>
+            Initiate Full AI Scan
+          </button>
+          <p class="disclaimer">By initiating, you agree to Aethra's algorithmic assessment protocols. Precision is subject to image clarity.</p>
+        </div>
+      </div>
+
+      <!-- Recent strip -->
+      <div class="recent-strip">
+        <span class="recent-label">Recent</span>
+        <div class="recent-items">
+          <a class="recent-item" href="#">
+            <div class="recent-thumb"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyu01PmP3YMr9TW1vXIxRPTnYPu12FxD-K_Au2lUmEy0n4KiudAEraABszU_bhkHBMibsc0v__i-UNn8PgAJGPOaFtwlOlWoU7u-1yyz5i_LMEqTB6dJ0PEkkSCzXCi_GJtJCT0ZKqsIKOmxULwa4BF9kK7Sl3WfPYdt0Jnnsx-hvdmYvJW9XxjCyNRE3bZNrhuK5ejOaDrwGgn9VGszdlNSZAx2AtIOExW6xfkYX70lpEUTFs4D4tppmEN7M9b5KwhvN7TmmjOGc" alt="Victorian Ring"/></div>
+            <div><div class="recent-name">Victorian Ring</div><div class="recent-meta">18K · 12.4g · Verified</div></div>
+          </a>
+          <a class="recent-item" href="#">
+            <div class="recent-thumb">💍</div>
+            <div><div class="recent-name">Gold Bangle</div><div class="recent-meta">22K · 18.2g · Verified</div></div>
+          </a>
+          <a class="recent-item" href="#">
+            <div class="recent-thumb">⌚</div>
+            <div><div class="recent-name">Vintage Watch</div><div class="recent-meta">14K · 42.7g · Pending</div></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-logo">Aethra</span>
+    <div class="footer-links">
+      <a class="footer-link" href="#">Privacy Policy</a>
+      <a class="footer-link" href="#">Terms of Service</a>
+    </div>
+    <span class="footer-copy">© 2024 Aethra Gold Assessment</span>
+  </footer>
+</main>
+
+<script>
+function previewImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const preview = document.getElementById("preview");
+    preview.src = e.target.result;
+    preview.style.display = "block";
+    document.getElementById("uploadIconRing").style.display = "none";
+    document.getElementById("uploadTitle").style.display = "none";
+    document.getElementById("uploadHint").style.display = "none";
+    const btn = document.getElementById("selectBtn");
+    btn.textContent = "Change Image";
+    btn.style.marginTop = "12px";
+  };
+  reader.readAsDataURL(file);
+}
+
+async function startAnalysis() {
+  const fileInput = document.getElementById("goldImage");
+  if (fileInput.files.length === 0) {
+    alert("Please upload an image first.");
+    return;
+  }
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.classList.add("active");
+  const formData = new FormData();
+  formData.append("image", fileInput.files[0]);
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/assess", {
+      method: "POST",
+      body: formData
+    });
+    const data = await response.json();
+    localStorage.setItem("assessmentResult", JSON.stringify(data));
+    window.location.href = "progress.html";
+  } catch (error) {
+    overlay.classList.remove("active");
+    console.error(error);
+    alert("Backend connection failed. Please ensure the server is running.");
+  }
+}
+</script>
+</body>
+</html>

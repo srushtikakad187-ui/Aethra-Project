@@ -1,0 +1,846 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aethra - Professional Grade AI Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream:       #F5F0E8;
+    --cream-mid:   #EDE7D8;
+    --cream-dark:  #E0D8C8;
+    --dark:        #1A1612;
+    --dark-mid:    #2C2520;
+    --dark-panel:  #221E19;
+    --gold:        #C8943A;
+    --gold-light:  #DDB060;
+    --gold-dim:    #8A6425;
+    --red:         #C0392B;
+    --red-light:   #E74C3C;
+    --text-muted:  #8A7F72;
+    --text-body:   #3D342A;
+    --border:      rgba(200,148,58,0.18);
+    --border-dark: rgba(255,255,255,0.07);
+    --sidebar-w:   256px;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--text-body);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    border-right: 1px solid var(--border-dark);
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border-dark);
+  }
+
+  .sidebar-logo .wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  .sidebar-logo .tagline {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-dark);
+  }
+
+  .sidebar-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+
+  .sidebar-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .sidebar-user-info .name {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.2;
+  }
+
+  .sidebar-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #27AE60;
+    display: inline-block;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 0;
+    overflow-y: auto;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 24px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .nav-item:hover {
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .nav-item.active {
+    color: var(--gold-light);
+    background: rgba(200,148,58,0.08);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold);
+  }
+
+  .nav-item .material-symbols-outlined {
+    font-size: 19px;
+    opacity: 0.8;
+  }
+
+  .sidebar-bottom {
+    padding: 16px 0;
+    border-top: 1px solid var(--border-dark);
+  }
+
+  .new-analysis-btn {
+    margin: 0 16px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 16px;
+    background: var(--gold);
+    color: var(--dark);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+
+  .new-analysis-btn:hover { background: var(--gold-light); }
+
+  /* ── MAIN ── */
+  .main-wrapper {
+    margin-left: var(--sidebar-w);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--cream);
+    border-bottom: 1px solid var(--cream-dark);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .breadcrumb a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .breadcrumb a:hover { color: var(--gold); }
+
+  .breadcrumb-sep { opacity: 0.4; }
+
+  .breadcrumb .current {
+    color: var(--text-body);
+    font-weight: 500;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .compliance-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    background: rgba(200,148,58,0.06);
+  }
+
+  .compliance-badge::before {
+    content: '◆';
+    font-size: 8px;
+  }
+
+  .session-id {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    flex: 1;
+    padding: 36px 40px 60px;
+  }
+
+  /* ── HERO CARD ── */
+  .hero-card {
+    background: linear-gradient(135deg, #2A211A 0%, #1A1612 100%);
+    border-radius: 3px;
+    padding: 10px 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(200,148,58,0.12);
+  }
+
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(200,148,58,0.07) 1px, transparent 0);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+
+  .hero-card::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,148,58,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+
+  /* Gauge */
+  .gauge-wrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+
+  .gauge-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+
+  .gauge-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gauge-score {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .gauge-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-top: 2px;
+  }
+
+  /* Hero text */
+  .hero-text { flex: 1; min-width: 200px; }
+
+  .hero-badges {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .badge-risk {
+    background: var(--red);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 2px;
+  }
+
+  .badge-uuid {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.06em;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 700;
+    
+    color: #F5E7C1;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .hero-meta-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-gold { background: var(--gold); }
+  .dot-red  { background: var(--red-light); }
+
+  /* Hero actions */
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--gold-light); }
+
+  .btn-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: transparent;
+    color: rgba(255,255,255,0.65);
+    border: 1px solid rgba(255,255,255,0.15);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.3);
+    color: #fff;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  /* ── METRICS GRID ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  @media (min-width: 900px) {
+    .metrics-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .metric-card {
+    background: #fff;
+    border: 1px solid var(--cream-dark);
+    border-radius: 2px;
+    padding: 22px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .metric-card:hover {
+    border-color: rgba(200,148,58,0.3);
+    box-shadow: 0 4px 20px rgba(200,148,58,0.06);
+  }
+
+  .metric-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .metric-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text-body);
+    line-height: 1;
+  }
+
+  .metric-value.gold { color: var(--gold); }
+
+  .metric-icon {
+    font-size: 20px;
+    color: var(--cream-dark);
+  }
+
+  .metric-unit {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    margin-left: 2px;
+  }
+
+  /* ── SPECTROSCOPIC CARD ── */
+  .spec-card {
+    background: #fff;
+    border: 1px solid var(--cream-dark);
+    border-radius: 2px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+
+  .spec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+
+  .spec-engine {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .spec-chart {
+    height: 160px;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    position: relative;
+    padding-bottom: 28px;
+  }
+
+  .spec-bar {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+    transition: opacity 0.2s;
+  }
+
+  .spec-bar.normal  { background: var(--cream-dark); }
+  .spec-bar.anomaly { background: rgba(192,57,43,0.18); border-top: 2px solid var(--red-light); }
+  .spec-bar.signal  { background: rgba(200,148,58,0.2); border-top: 2px solid var(--gold); }
+
+  .spec-axis {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── BOTTOM IMAGE ── */
+  .hero-image-wrap {
+    border-radius: 3px;
+    overflow: hidden;
+    height: 280px;
+    position: relative;
+  }
+
+  .hero-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.15) sepia(0.1);
+    transition: transform 0.7s ease, filter 0.5s;
+  }
+
+  .hero-image-wrap:hover img {
+    transform: scale(1.03);
+    filter: grayscale(0) sepia(0.05);
+  }
+
+  .hero-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,22,18,0.7) 0%, transparent 55%);
+    display: flex;
+    align-items: flex-end;
+    padding: 28px 32px;
+  }
+
+  .overlay-tag {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .overlay-icon {
+    width: 40px; height: 40px;
+    border-radius: 2px;
+    background: rgba(200,148,58,0.15);
+    border: 1px solid rgba(200,148,58,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-light);
+    backdrop-filter: blur(8px);
+  }
+
+  .overlay-text h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+
+  .overlay-text p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--cream);
+    border-top: 1px solid var(--cream-dark);
+    padding: 20px 40px;
+    margin-left: var(--sidebar-w);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer .copy {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  footer .links {
+    display: flex;
+    gap: 20px;
+  }
+
+  footer a {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="wordmark">Aethra</div>
+    <div class="tagline">Professional Grade AI</div>
+  </div>
+
+  <div class="sidebar-user">
+    <div class="sidebar-avatar">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD29kAFiCydCRzdMaeFqOtulcqvHyqS1Frx2aJ77aZOlqq8qqDJhMjx_zZuFnhcBkGggIpFtqD_5nzl7lFzotKvQk28k-5YVyj9OAVmI5h9NLhf_RkodjNOV5cJPwsYXaRNhXqFBnQXu4sLkmy4hrGoUYvRzHZzZLE9yxR2v-5YX1LJGHdtCbBu6MyZjw22teQUK_eLUy4JF5zWpAcRiYe9pgP48mT9-Z6a4MQ4fvaePOhVP7XROrBuk-2nZDRbBOsecbCXmTpw8bU" alt="User"/>
+    </div>
+    <div class="sidebar-user-info">
+      <div class="name">Aethra Assessment</div>
+      <div class="sidebar-status">
+        <span class="status-dot"></span>
+        System Ready
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="sidebar-bottom">
+    <a href="detailedcode.html" class="new-analysis-btn">
+      <span class="material-symbols-outlined" style="font-size:16px">add</span>
+      New Analysis
+    </a>
+    <a href="#" class="nav-item">
+      <span class="material-symbols-outlined">help_outline</span>
+      Support
+    </a>
+    <a href="login.html" class="nav-item">
+      <span class="material-symbols-outlined">logout</span>
+      Sign Out
+    </a>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main-wrapper">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="breadcrumb">
+      <a href="#">Assessments</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="current">History</span>
+    </div>
+    <div class="topbar-right">
+      <div class="compliance-badge">ISO 17025 Compliant</div>
+      <div class="session-id">Session #A-4821</div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="content">
+
+    <!-- Hero card -->
+    <div class="hero-card">
+      <div class="hero-inner">
+
+        <!-- Gauge -->
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="7"/>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#C0392B"
+              stroke-width="7"
+              stroke-dasharray="326.73"
+              stroke-dashoffset="261.38"
+              stroke-linecap="round"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-score" id="assessmentScore">20</div>
+            <div class="gauge-label">Score</div>
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div class="hero-text">
+          <div class="hero-badges">
+            <span class="badge-risk">Critical Risk</span>
+            <span class="badge-uuid">UUID: AX-7742-09</span>
+          </div>
+          <h1 class="hero-title" id="assessmentTitle">Assessment<br>Rejected</h1>
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <span class="hero-meta-dot dot-gold"></span>
+              <span id="goldType">22K</span>
+            </div>
+            <div class="hero-meta-item">
+              <span class="hero-meta-dot dot-red"></span>
+              <span id="riskLevel">Risk: HIGH</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        
+
+      </div>
+    </div>
+
+    <!-- Core Physical Metrics -->
+    <div class="section-label">Core Physical Metrics</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div>
+          <div class="metric-label">Measured Weight</div>
+          <div class="metric-value">4.2–5.8<span class="metric-unit">g</span></div>
+        </div>
+        <span class="material-symbols-outlined metric-icon">balance</span>
+      </div>
+      <div class="metric-card">
+        <div>
+          <div class="metric-label">Karat Range</div>
+          <div class="metric-value gold" id="dashboardKarat">—</div>
+        </div>
+        <span class="material-symbols-outlined metric-icon">stars</span>
+      </div>
+      <div class="metric-card">
+        <div>
+          <div class="metric-label">Density Delta (Δ)</div>
+          <div class="metric-value">5.0</div>
+        </div>
+        <span class="material-symbols-outlined metric-icon">water_drop</span>
+      </div>
+      <div class="metric-card">
+        <div>
+          <div class="metric-label">Confidence Score</div>
+          <div class="metric-value"><span id="confidenceScore">—</span><span class="metric-unit">/100</span></div>
+        </div>
+        <span class="material-symbols-outlined metric-icon">analytics</span>
+      </div>
+    </div>
+
+
+
+<script>
+  const result = JSON.parse(localStorage.getItem("assessmentResult") || "null");
+
+  if (result) {
+    const finalScore    = result.consensus.final_score;
+    const recommendation = result.consensus.recommendation;
+    const riskLevel      = result.consensus.risk_level;
+    const karat          = result.optical.karat_estimate;
+    const confidence     = result.optical.confidence_score;
+
+    let statusText = "Assessment Rejected";
+    if (recommendation === "pre_approve")        statusText = "Assessment Approved";
+    if (recommendation === "needs_verification") statusText = "Needs Verification";
+
+    document.getElementById("assessmentTitle").innerText = statusText;
+    document.getElementById("assessmentScore").innerText = Math.round(finalScore);
+    document.getElementById("goldType").innerText        = karat;
+    document.getElementById("riskLevel").innerText       = "Risk: " + riskLevel.toUpperCase();
+    document.getElementById("confidenceScore").innerText = Math.round(confidence);
+    document.getElementById("dashboardKarat").innerText  = karat;
+  }
+</script>
+</body>
+</html>

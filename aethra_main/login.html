@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AETHRA Gold Assessment - Login</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts for typography -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Cinzel:wght@600&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'aethra-navy': '#0d1526',
+            'aethra-gold': '#c5a059',
+            'aethra-gold-muted': '#8a744a',
+            'aethra-input-bg': '#f0f4f9',
+            'aethra-dark-button': '#0a111f'
+          },
+          fontFamily: {
+            'cinzel': ['Cinzel', 'serif'],
+            'inter': ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-styles">
+    /* Subtle geometric hex pattern for the top left decoration */
+    .hex-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 20px);
+      gap: 10px;
+      opacity: 0.2;
+    }
+    .hex-item {
+      width: 20px;
+      height: 22px;
+      background-color: #c5a059;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+    .hex-item:nth-child(even) {
+      transform: translateY(15px);
+    }
+
+    /* Gold gradient bars icon */
+    .bar-icon div {
+      background: linear-gradient(to bottom, #f2d28a, #c5a059);
+      border-radius: 2px;
+    }
+
+    /* Card shadow */
+    .login-card {
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    }
+  </style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&amp;display=swap" rel="stylesheet"/></head>
+<body class="font-inter antialiased min-h-screen bg-[#f7f3ed] flex flex-col md:flex-row">
+<!-- BEGIN: LeftBrandPanel -->
+<section class="w-full md:w-1/2 bg-[#1f1b16] flex flex-col items-center justify-center p-8 relative overflow-hidden text-center min-h-[500px] md:min-h-screen lg:p-16" data-purpose="branding-panel">
+<!-- Top Geometric Decoration -->
+<div class="absolute top-20 flex flex-col items-center">
+<div class="hex-grid">
+<div class="hex-item"></div><div class="hex-item"></div><div class="hex-item"></div><div class="hex-item"></div>
+<div class="hex-item"></div><div class="hex-item"></div><div class="hex-item"></div><div class="hex-item"></div>
+<div class="hex-item"></div><div class="hex-item"></div><div class="hex-item"></div><div class="hex-item"></div>
+</div>
+</div>
+<!-- AI Badge -->
+<div class="mb-6 mt-20">
+<span class="inline-flex items-center px-4 py-1 rounded-full border border-aethra-gold-muted text-[10px] text-aethra-gold font-medium uppercase tracking-[0.2em]">
+<span class="mr-1">✦</span> Ai-powered assay
+      </span>
+</div>
+<!-- Logo Section -->
+<div class="mb-12"><h1 class="text-white text-6xl font-cinzel tracking-[0.4em] mb-4">AETHRA</h1><div class="h-[0.5px] w-20 bg-aethra-gold/60 mx-auto mb-4"></div><p class="text-aethra-gold/80 text-[10px] tracking-[0.5em] font-light uppercase">Gold Assessment</p></div>
+<!-- Mission Statement -->
+<div class="max-w-xs mb-16">
+<p class="text-slate-400 text-sm leading-relaxed font-light">
+        Precision AI analysis for gold purity, valuation, and market-grade certification.
+      </p>
+</div>
+<!-- Bottom Bar Chart Icon -->
+<div class="bar-icon flex items-end gap-1.5 h-10 mb-20">
+<div class="w-1.5 h-4"></div>
+<div class="w-1.5 h-6"></div>
+<div class="w-1.5 h-10"></div>
+<div class="w-1.5 h-8"></div>
+<div class="w-1.5 h-11"></div>
+</div>
+</section>
+<!-- END: LeftBrandPanel -->
+<!-- BEGIN: MainLoginPanel -->
+<main class="w-full md:w-1/2 flex items-center justify-center p-6 bg-[#f7f3ed]" data-purpose="login-container">
+<!-- BEGIN: LoginCard -->
+<div class="login-card w-full max-w-md bg-[#fffdf9] rounded-2xl shadow-2xl border-t-4 border-aethra-gold pt-12 pb-10 px-8 md:px-12 flex flex-col p-10 md:p-14 border-t-[3px]">
+<!-- Card Header -->
+<div class="text-center mb-8"><span class="text-[10px] text-aethra-gold font-bold tracking-[0.25em] uppercase mb-6 block">Assessment Portal</span><h2 class="text-3xl font-['Playfair_Display'] text-slate-800 mb-3">Welcome back</h2><p class="text-slate-400 text-sm font-light leading-relaxed">Sign in to access your gold assessment dashboard</p></div>
+<!-- Login Form -->
+<form class="space-y-6 space-y-8">
+<!-- Email Input -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold text-slate-500 tracking-wider uppercase ml-1" for="email">Candidate ID or Email</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pl-4">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<input class="block w-full pl-11 pr-4 py-3.5 bg-white bg-[#faf7f2] border border-[#e5d6b8] rounded-lg text-sm text-slate-700 placeholder:text-slate-300 focus:ring-1 focus:ring-aethra-gold focus:border-aethra-gold transition-all shadow-sm" id="email" type="text" value="srushtikakad56@gmail.com"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold text-slate-500 tracking-wider uppercase ml-1" for="password">Password</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pl-4">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<input class="block w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 placeholder:text-slate-300 focus:ring-1 focus:ring-[#c5a059] focus:border-[#c5a059] transition-all shadow-sm" id="password" type="password" value="password123"/>
+<span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 cursor-pointer">
+<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+</div>
+</div>
+<!-- Options -->
+<div class="flex items-center justify-between text-[11px]">
+<label class="flex items-center text-slate-500">
+<input class="rounded border-slate-300 text-aethra-gold focus:ring-aethra-gold mr-2 h-3.5 w-3.5" type="checkbox"/>
+            Remember this device
+          </label>
+<a class="text-aethra-gold hover:text-aethra-gold-muted font-medium" href="#">Forgot password?</a>
+</div>
+<!-- Submit Button -->
+ <button
+class="w-full bg-[#1f1b16] text-white py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-[#2d271f] transition-all duration-300 uppercase tracking-[0.2em] text-sm font-semibold"
+type="button"
+onclick="goToDetails()">
+
+<span>Initiate Secure Login</span>
+
+</button>
+
+</form>
+<!-- Footer Compliance -->
+<div class="mt-8 flex items-center justify-center gap-2 text-[10px] text-slate-400 uppercase tracking-widest">
+<svg class="h-3 w-3 text-aethra-gold" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>256-bit encrypted • ISO 17025 compliant</span>
+</div>
+</div>
+<!-- END: LoginCard -->
+</main>
+<!-- END: MainLoginPanel -->
+ <script>
+function goToDetails() {
+    window.location.href = "detailedcode.html";
+}
+</script>
+</body></html>
